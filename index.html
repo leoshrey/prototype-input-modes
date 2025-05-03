@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gesture vs Cursor Prototype</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      color: white;
+      font-family: Helvetica, sans-serif;
+    }
+    .screen {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-size: 2rem;
+      padding: 2rem;
+      z-index: 10;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+    #gestureStartButton, #cursorStartButton {
+      margin-top: 2rem;
+      padding: 16px 32px;
+      font-size: 1.6rem;
+      cursor: pointer;
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    #cursorIntro {
+      pointer-events: auto;
+    }
+    #cursorStartButton {
+      pointer-events: auto;
+    }
+
+    #cursorStartButton:hover {
+      outline: 2px solid white; /* just for debugging */
+    }
+
+    #gestureStartButton:hover, #cursorStartButton:hover {
+      background-color: #ddd;
+    }
+    .hint-text {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      opacity: 0;
+      color: white;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .hint-visible {
+      animation: ghostHint 3s ease-in-out forwards;
+    }
+    .timer-text {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 1.2rem;
+      color: white;
+      z-index: 1000;
+      transition: all 0.8s ease-in-out;
+      text-align: center;
+    }
+    .timer-center {
+      top: 50%;
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+      font-size: 4rem;
+    }
+    body.hide-cursor {
+      cursor: none;
+    }
+    @keyframes buttonBlink {
+      0%, 100% { background-color: white; }
+      90% { background-color: #808080; }
+    }
+
+    .blinking {
+      animation: buttonBlink 0.6s infinite;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-4px); }
+      50% { transform: translateX(4px); }
+      75% { transform: translateX(-4px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.3s ease-in-out;
+    }
+    @keyframes ghostHint {
+      0%   { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+      10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+      90%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+      100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Gesture Interaction Intro -->
+<div id="gestureIntro" class="screen">
+  <div>
+    <p><strong>Part One:</strong><br>
+    You move without touching.<br>
+    The air obeys your gestures.<br><br>
+    <em id="gestureInstruction">(in front of your web camera, wave your hand and use index finger as a cursor to click)</em><br><br>
+    <button id="gestureStartButton">Begin Gesture Interaction</button>
+  </div>
+</div>
+
+<div id="cursorIntro" class="screen" style="display: none;">
+  <div>
+    <p><strong>Part Two:</strong><br>
+    Now, move with your cursor.<br>
+    Disrupt by HOVERING.<br><br>
+    <em id="gestureInstruction">(use your mouse)</em><br><br>
+    <button id="cursorStartButton">Begin Cursor Interaction</button>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+<div id="timer" class="timer-text"></div>
+<div id="hint" class="screen hint-text">✋ Use your index finger to disrupt</div>
+<div id="cursorHint" class="screen hint-text">↑ Use cursor to disrupt</div>
+<canvas id="gestureIntroCanvas" style="position:absolute; top:0; left:0; z-index:0;"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+<script src="sketch.js"></script>
+</body>
+</html>
