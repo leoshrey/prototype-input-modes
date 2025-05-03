@@ -72,6 +72,10 @@ cursorStart.addEventListener('click', () => {
   cursorIntro.style.display = 'none';
   cursorIntro.style.visibility = 'hidden';
   canvas.style.display = 'block';
+
+  indexTipX = -1000;
+  indexTipY = -1000;
+
   resizeCanvas();
   createLetters();
 
